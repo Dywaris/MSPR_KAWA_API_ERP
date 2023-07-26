@@ -121,7 +121,7 @@ router.get('/', async (req, res) => {
  */
 router.get('/:id', async (req, res) => {
     await checkToken(JSON.parse(JSON.stringify(req.headers)), res);
-    const id = parseInt(req.body.id);
+    const id = parseInt(req.params.id);
 
     pool.query('SELECT * FROM products\n' +
         'inner JOIN details on products.details_id = details.id\n' +
