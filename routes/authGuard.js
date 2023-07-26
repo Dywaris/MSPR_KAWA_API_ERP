@@ -21,7 +21,7 @@ function checkToken(headers, res) {
     });
 }
 
-router.get('/', async (req, res) => {
+router.post('/', async (req, res) => {
     const email = req.body.email;
     const token = req.body.token;
     pool.query('SELECT * FROM users\n' +
