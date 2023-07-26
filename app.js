@@ -1,14 +1,16 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+let createError = require('http-errors');
+let express = require('express');
+let path = require('path');
+let cookieParser = require('cookie-parser');
+let logger = require('morgan');
+let bodyParser = require("body-parser");
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var productsRouter = require('./routes/products');
+let indexRouter = require('./routes/index');
+let usersRouter = require('./routes/users');
+let authRouter = require('./routes/authGuard').router;
+let productsRouter = require('./routes/products');
 
-var app = express();
+let app = express();
 
 const swaggerDefinition = {
   openapi: '3.0.0',
@@ -38,6 +40,7 @@ const options = {
 const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerSpec = swaggerJSDoc(options);
 const swaggerUi = require('swagger-ui-express');
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
@@ -54,6 +57,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/products', productsRouter);
+app.use('/auth', authRouter);
 const port = "3000";
 
 app.listen(port, () => {
