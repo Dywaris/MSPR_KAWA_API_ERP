@@ -7,6 +7,7 @@ let bodyParser = require("body-parser");
 
 let indexRouter = require('./routes/index');
 let usersRouter = require('./routes/users');
+let authRouter = require('./routes/authGuard').router;
 let productsRouter = require('./routes/products');
 
 let app = express();
@@ -56,6 +57,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/products', productsRouter);
+app.use('/auth', authRouter);
 const port = "3000";
 
 app.listen(port, () => {

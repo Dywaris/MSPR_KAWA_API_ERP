@@ -16,7 +16,7 @@ async function createUser(req, res) {
   if (firstname && lastname && email) {
     const alreadExist = await emailAlreadyExist(email);
     if (alreadExist !== true) {
-      const token = rand.generateKey();
+      const token = rand.generateKey(26);
       pool.query('INSERT INTO users (nom, prenom, email, cles_securite) VALUES ($1,$2, $3, $4)',
           [lastname, firstname, email, token] ,(error, results) => {
         if (error) {
