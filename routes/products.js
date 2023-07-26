@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
-var pool = require('../connection-query');
+var pool = require('../utils/connection-query');
+let checkToken = require('../utils/authGuard');
 
 /**
  * @swagger
@@ -49,7 +50,8 @@ var pool = require('../connection-query');
  *                           type: string
  *                           example: 7
  */
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
+    await checkToken(JSON.parse(JSON.stringify(req.headers)), res);
     pool.query('SELECT * FROM products\n' +
         'inner JOIN details on products.details_id = details.id\n' +
         'ORDER BY products.id ASC', (error, results) => {
@@ -117,7 +119,8 @@ router.get('/', (req, res) => {
  *                           type: string
  *                           example: 7
  */
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
+    await checkToken(JSON.parse(JSON.stringify(req.headers)), res);
     const id = parseInt(req.params.id);
 
     pool.query('SELECT * FROM products\n' +
