@@ -1,7 +1,7 @@
 let express = require('express');
 let router = express.Router();
 let pool = require('../utils/connection-query');
-let rand = require("generate-key");
+var crypto = require("crypto");
 let nodemailer = require('nodemailer');
 let qrcode = require('qrcode');
 /* GET users listing. */
@@ -16,7 +16,7 @@ async function createUser(req, res) {
   if (firstname && lastname && email) {
     const alreadExist = await emailAlreadyExist(email);
     if (alreadExist !== true) {
-      const token = rand.generateKey(26);
+      const token = crypto.randomBytes(26).toString('hex');
       pool.query('INSERT INTO users (nom, prenom, email, cles_securite) VALUES ($1,$2, $3, $4)',
           [lastname, firstname, email, token] ,(error, results) => {
         if (error) {
