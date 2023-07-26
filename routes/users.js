@@ -10,9 +10,9 @@ router.post('/', function(req, res) {
 });
 
 async function createUser(req, res) {
-  let firstname = req.query.firstname;
-  let lastname = req.query.lastname;
-  let email = req.query.email;
+  let firstname = req.body.firstname;
+  let lastname = req.body.lastname;
+  let email = req.body.email;
   if (firstname && lastname && email) {
     const alreadExist = await emailAlreadyExist(email);
     if (alreadExist !== true) {
