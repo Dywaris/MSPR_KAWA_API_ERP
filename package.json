@@ -12,8 +12,10 @@
     "generate-key": "^0.0.6",
     "http-errors": "~1.6.3",
     "morgan": "~1.9.1",
+    "nodemailer": "^6.9.4",
     "pg": "^8.11.1",
     "pug": "2.0.0-beta11",
+    "qrcode": "^1.5.3",
     "swagger-jsdoc": "^5.0.1",
     "swagger-ui-express": "^5.0.0"
   }
