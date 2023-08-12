@@ -8,7 +8,6 @@ describe("Test the root path", () => {
     });
 
     afterAll(done => {
-        console.log('icic');
         app.close(() => {
             setTimeout(done, 100)
         })
