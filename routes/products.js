@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var pool = require('../utils/connection-query');
+var {getClient} = require('../utils/connection-query');
 let checkToken = require('./authGuard').checkToken;
 
 /**
@@ -52,16 +52,25 @@ let checkToken = require('./authGuard').checkToken;
  */
 router.get('/', async (req, res) => {
     await checkToken(JSON.parse(JSON.stringify(req.headers)), res);
-    pool.query('SELECT * FROM products\n' +
-        'inner JOIN details on products.details_id = details.id\n' +
-        'ORDER BY products.id ASC', (error, results) => {
-        if (error) {
-            res.status(404);
-            throw error;
-        }
-        res.status(200).json(results.rows);
-    });
+   return await router.getCollectionProducts(res);
 });
+
+router.getCollectionProducts = (res) => {
+    return new Promise(async (resolve) => {
+        const client = await getClient();
+        client.query('SELECT * FROM products\n' +
+            'inner JOIN details on products.details_id = details.id\n' +
+            'ORDER BY products.id ASC', async (error, results) => {
+            if (error) {
+                res.status(404);
+                throw error;
+            }
+            await client.end();
+            return resolve(res.status(200).json(results.rows));
+        });
+    })
+
+}
 
 
 
@@ -122,11 +131,12 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
     await checkToken(JSON.parse(JSON.stringify(req.headers)), res);
     const id = parseInt(req.params.id);
-
-    pool.query('SELECT * FROM products\n' +
+    const client = await getClient();
+    client.query('SELECT * FROM products\n' +
         'inner JOIN details on products.details_id = details.id\n' +
         'WHERE products.id = $1\n' +
-        'ORDER BY products.id ASC',[id] ,(error, results) => {
+        'ORDER BY products.id ASC',[id] , async (error, results) => {
+        await client.end();
         if (error) {
             res.status(404);
             throw error;

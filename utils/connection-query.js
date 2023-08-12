@@ -1,10 +1,14 @@
-const Pool = require('pg').Pool;
+const {Client} = require('pg');
+const credential = require('./../client-env.json');
 
-const pool = new Pool({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'paye_ton_kawa',
-    password: 'example',
-    port: 5434,
-});
-module.exports = pool;
+module.exports.getClient = async () => {
+    const client = new Client({
+        user: credential.bdd.user,
+        host: credential.bdd.host,
+        database: credential.bdd.database,
+        password: credential.bdd.password,
+        port: credential.bdd.port,
+    });
+    await client.connect();
+    return client;
+};

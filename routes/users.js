@@ -1,7 +1,8 @@
 let express = require('express');
 let router = express.Router();
 let pool = require('../utils/connection-query');
-let rand = require("generate-key");
+var crypto = require("crypto");
+const credential = require('./../client-env.json');
 let nodemailer = require('nodemailer');
 let qrcode = require('qrcode');
 /* GET users listing. */
@@ -16,7 +17,7 @@ async function createUser(req, res) {
   if (firstname && lastname && email) {
     const alreadExist = await emailAlreadyExist(email);
     if (alreadExist !== true) {
-      const token = rand.generateKey(26);
+      const token = crypto.randomBytes(26).toString('hex');
       pool.query('INSERT INTO users (nom, prenom, email, cles_securite) VALUES ($1,$2, $3, $4)',
           [lastname, firstname, email, token] ,(error, results) => {
         if (error) {
@@ -60,18 +61,18 @@ async function sendMail(req, res, email, token) {
     service: 'gmail',
     auth: {
       type: 'OAuth2',
-      user: 'payetonkawaepsi@gmail.com',
-      clientId: '555722656717-k88e6nvai6vgp987mbaps2bp70m4m187.apps.googleusercontent.com',
-      clientSecret: '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',
-      accessToken: 'ya29.a0AbVbY6NzHHBRFo31IbfUzy_YA2Mek4Ja6TN96ad_UgqV1A_CvW2VXE_nwtt2rDHPGczX0xgQ8zUGYZ_uZKVpA4bOdKwCE9O5FiAFnq9k_JiVA3ThHeJpo9B_K-Dwcn950p-cEA-YlLdOFN7kiCnp1NPsdwcnaCgYKAdcSARASFQFWKvPlmT0izGZB8yqO-6EzPlB0Ww0163',
-      refreshToken: '1//04Kqp3effUzWUCgYIARAAGAQSNwF-L9IrV0pFxulPNYVs2xOQ6rOEPgyd90IHGrm0K4fwP_KTK4rfgShVdl9XNhYaGKquzJrumws'
+      user: credential.gmail.email,
+      clientId: credential.gmail.clientId,
+      clientSecret: credential.gmail.clientSecret,
+      accessToken: credential.gmail.accessToken,
+      refreshToken: credential.gmail.refreshToken
     },
     tls: {
       rejectUnauthorized: false
     }
   });
   var message = {
-    from: 'payetonkawaepsi@gmail.com',
+    from:  credential.gmail.email,
     to: email,
     attachDataUrls: true,
     subject: 'QRCODE auth',
