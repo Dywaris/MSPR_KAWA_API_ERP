@@ -1,0 +1,225 @@
+{
+	"info": {
+		"_postman_id": "582b19ba-c89d-4533-a8b5-627521cc9318",
+		"name": "Express API for KAWA ERP",
+		"description": "This is a REST API application made with Express. It retrieves data from KAWA ERP.\n\nContact Support:\n Name: 25 rue dépot Arras",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "products",
+			"item": [
+				{
+					"name": "Get list of products",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/products",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"products"
+							]
+						},
+						"description": "Retrieve a list of products from KAWA ERP."
+					},
+					"response": [
+						{
+							"name": "Successful operation.",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/products",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n \"products\": [\n  {\n   \"createdAt\": \"2023-02-20T03:49:43.205Z\",\n   \"name\": \"Sharon Smitham IV\",\n   \"details\": {\n    \"price\": \"ea se\",\n    \"description\": \"The Apollotech B340 is an affordable wireless mouse with reliable connectivity 12 months battery life and modern design\",\n    \"color\": \"mint green\"\n   }\n  },\n  {\n   \"createdAt\": \"2023-02-20T03:49:43.205Z\",\n   \"name\": \"Sharon Smitham IV\",\n   \"details\": {\n    \"price\": \"esse aute fugiat mollit ani\",\n    \"description\": \"The Apollotech B340 is an affordable wireless mouse with reliable connectivity 12 months battery life and modern design\",\n    \"color\": \"mint green\"\n   }\n  }\n ]\n}"
+						}
+					]
+				},
+				{
+					"name": "A single product",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/products/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"products",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "<integer>",
+									"description": "(Required) Numeric ID of the product to retrieve."
+								}
+							]
+						},
+						"description": "Retrieve a product from KAWA ERP."
+					},
+					"response": [
+						{
+							"name": "Successful operation.",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/products/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"products",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n \"products\": [\n  {\n   \"createdAt\": \"2023-02-20T03:49:43.205Z\",\n   \"name\": \"Sharon Smitham IV\",\n   \"details\": {\n    \"price\": \"ea se\",\n    \"description\": \"The Apollotech B340 is an affordable wireless mouse with reliable connectivity 12 months battery life and modern design\",\n    \"color\": \"mint green\"\n   }\n  },\n  {\n   \"createdAt\": \"2023-02-20T03:49:43.205Z\",\n   \"name\": \"Sharon Smitham IV\",\n   \"details\": {\n    \"price\": \"esse aute fugiat mollit ani\",\n    \"description\": \"The Apollotech B340 is an affordable wireless mouse with reliable connectivity 12 months battery life and modern design\",\n    \"color\": \"mint green\"\n   }\n  }\n ]\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Create an user",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "firstname",
+							"value": "<string>"
+						},
+						{
+							"key": "lastname",
+							"value": "<string>"
+						},
+						{
+							"key": "email",
+							"value": "<string>"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users"
+					]
+				},
+				"description": "Create an user in database."
+			},
+			"response": [
+				{
+					"name": "Successful operation.",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "firstname",
+									"value": "<string>"
+								},
+								{
+									"key": "lastname",
+									"value": "<string>"
+								},
+								{
+									"key": "email",
+									"value": "<string>"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "text",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "text/plain"
+						}
+					],
+					"cookie": [],
+					"body": ""
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3000",
+			"type": "string"
+		}
+	]
+}
