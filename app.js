@@ -4,8 +4,8 @@ let path = require('path');
 let cookieParser = require('cookie-parser');
 let logger = require('morgan');
 let bodyParser = require("body-parser");
+const credential = require('./client-env.json');
 
-let indexRouter = require('./routes/index');
 let usersRouter = require('./routes/users');
 let authRouter = require('./routes/authGuard').router;
 let productsRouter = require('./routes/products');
@@ -54,15 +54,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/products', productsRouter);
 app.use('/auth', authRouter);
-const port = "3000";
 
-app.listen(port, () => {
-  console.log(`App listening on port ${port}`)
-});
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
@@ -81,4 +76,9 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-module.exports = app;
+const server = app.listen(credential.port, () => {
+  console.log(`App listening on port ${port}`)
+});
+
+
+module.exports = server;
