@@ -13,9 +13,14 @@ let qrcode = require('qrcode');
  *     summary: Create an user
  *     description: Create an user in database.
  *     requestBody:
+ *       required: true
  *       content:
  *         application/x-www-form-urlencoded:
  *           schema:
+ *             required:
+ *               - firstname
+ *               - lastname
+ *               - email
  *             type: object
  *             properties:
  *               firstname:
