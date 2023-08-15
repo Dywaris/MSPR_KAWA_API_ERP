@@ -6,7 +6,7 @@ let logger = require('morgan');
 let bodyParser = require("body-parser");
 const credential = require('./client-env.json');
 
-let usersRouter = require('./routes/users');
+let usersRouter = require('./routes/users').router;
 let authRouter = require('./routes/authGuard').router;
 let productsRouter = require('./routes/products');
 

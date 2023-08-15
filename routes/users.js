@@ -53,11 +53,11 @@ async function createUser(req, res) {
             if (error) {
           return res.status(500).json({errorCode: 5001, description: 'Insert BDD failed'});
         } else {
-          sendMail(req, res, email, token);
+          return sendMail(req, res, email, token);
         }
       });
     } else {
-      return res.status(500).json({errorCode: 5002, description: 'User already created'});
+       return res.status(500).json({errorCode: 5002, description: 'User already created'});
     }
   } else {
     return res.status(500).json({errorCode: 5003, description: 'Missing parameters'});
@@ -79,47 +79,48 @@ async function emailAlreadyExist(email) {
   });
 }
 
-function generateQrcode(token) {
+async function generateQrcode(token) {
   return qrcode.toDataURL(token).then((url) => {
     return url;
   })
 }
 
 async function sendMail(req, res, email, token) {
+  return new Promise(async (resolve) => {
 
-  var qrcodeurl = await generateQrcode(token);
-  // login
-  var transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      type: 'OAuth2',
-      user: credential.gmail.email,
-      clientId: credential.gmail.clientId,
-      clientSecret: credential.gmail.clientSecret,
-      accessToken: credential.gmail.accessToken,
-      refreshToken: credential.gmail.refreshToken
-    },
-    tls: {
-      rejectUnauthorized: false
-    }
-  });
-  var message = {
-    from:  credential.gmail.email,
-    to: email,
-    attachDataUrls: true,
-    subject: 'QRCODE auth',
-    text: 'je suis un deve',
-    html: '<b>Contact Nom</b>:Julien<br/><b>Contact Email</b>: ' +
-        '<img src="' + qrcodeurl + '" alt="qrCode">'
-  };
-    // send mail with defined transport object
-    transporter.sendMail(message, function(error, info){
-      if(error){
-        return res.status(500).json({errorCode: 5004, description: 'Error mail server, mail not send'});
-      }
-      else{
-        return res.status(201).json('OK');
+    var qrcodeurl = await generateQrcode(token);
+    // login
+    var transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        type: 'OAuth2',
+        user: credential.gmail.email,
+        clientId: credential.gmail.clientId,
+        clientSecret: credential.gmail.clientSecret,
+        accessToken: credential.gmail.accessToken,
+        refreshToken: credential.gmail.refreshToken
+      },
+      tls: {
+        rejectUnauthorized: false
       }
     });
+    var message = {
+      from: credential.gmail.email,
+      to: email,
+      attachDataUrls: true,
+      subject: 'QRCODE auth',
+      text: 'je suis un deve',
+      html: '<b>Contact Nom</b>:Julien<br/><b>Contact Email</b>: ' +
+          '<img src="' + qrcodeurl + '" alt="qrCode">'
+    };
+    // send mail with defined transport object
+    transporter.sendMail(message, function (error, info) {
+      if (error) {
+       return  resolve(res.status(500).json({errorCode: 5004, description: 'Error mail server, mail not send'}));
+      } else {
+        return resolve(res.status(201).json({status:'ok'}));
+      }
+    });
+  });
 }
-module.exports = router;
+module.exports = {router, emailAlreadyExist, sendMail, generateQrcode};
