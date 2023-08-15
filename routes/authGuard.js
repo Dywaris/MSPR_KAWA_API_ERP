@@ -11,15 +11,15 @@ function checkToken(headers, res) {
                 'WHERE cles_securite = $1', [headers.token], async (error, results) => {
                 await client.end();
                 if (error) {
-                    return res.status(500).json({errorCode: 5000, description: 'Connection BDD failed'});
+                    return  resolve(res.status(500).json({errorCode: 5000, description: 'Connection BDD failed'}));
                 }
                 if (results.rows.length !== 1) {
-                    return res.status(403).json({errorCode: 4001, description: 'Wrong token in header'});
+                    return resolve(res.status(403).json({errorCode: 4001, description: 'Wrong token in header'}));
                 }
                 return resolve(true);
             });
         } else {
-            return res.status(403).json({errorCode: 4000, description: 'Missing token in header'});
+            return  resolve(res.status(403).json({errorCode: 4000, description: 'Missing token in header'}));
         }
     });
 }
@@ -32,7 +32,6 @@ router.post('/', async (req, res) => {
         'WHERE email = $1 and cles_securite = $2',[email, token], async (error, results) => {
         await client.end();
         if (error) {
-            console.log(error);
             return res.status(500).json({errorCode: 5000, description: 'Connection BDD failed'});
         }
         if (results.rows.length !== 1) {
