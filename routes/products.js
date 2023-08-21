@@ -62,6 +62,7 @@ router.getCollectionProducts = (res) => {
             'inner JOIN details on products.details_id = details.id\n' +
             'ORDER BY products.id ASC', async (error, results) => {
             await client.end();
+
             if (error) {res.status(404); } else {
                 return resolve(res.status(200).json(results.rows));
             }
