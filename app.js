@@ -6,7 +6,7 @@ let logger = require('morgan');
 let bodyParser = require("body-parser");
 const credential = require('./client-env.json');
 
-let usersRouter = require('./routes/users');
+let usersRouter = require('./routes/users').router;
 let authRouter = require('./routes/authGuard').router;
 let productsRouter = require('./routes/products');
 
@@ -17,6 +17,10 @@ const swaggerDefinition = {
   info: {
     title: 'Express API for KAWA ERP',
     version: '1.0.0',
+    externalDocs: {
+      description: "swagger.json",
+      url: "/swagger.json"
+    },
     description:
         'This is a REST API application made with Express. It retrieves data from KAWA ERP.',
     contact: {
@@ -43,6 +47,10 @@ const swaggerUi = require('swagger-ui-express');
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.get('/swagger.json', (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.send(swaggerSpec)
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -77,7 +85,7 @@ app.use(function(err, req, res, next) {
 });
 
 const server = app.listen(credential.port, () => {
-  console.log(`App listening on port ${port}`)
+  console.log(`App listening on port ${credential.port}`)
 });
 
 

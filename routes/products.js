@@ -61,12 +61,10 @@ router.getCollectionProducts = (res) => {
         client.query('SELECT * FROM products\n' +
             'inner JOIN details on products.details_id = details.id\n' +
             'ORDER BY products.id ASC', async (error, results) => {
-            if (error) {
-                res.status(404);
-                throw error;
-            }
             await client.end();
-            return resolve(res.status(200).json(results.rows));
+            if (error) {res.status(404); } else {
+                return resolve(res.status(200).json(results.rows));
+            }
         });
     })
 
@@ -139,9 +137,9 @@ router.get('/:id', async (req, res) => {
         await client.end();
         if (error) {
             res.status(404);
-            throw error;
+        } else {
+            res.status(200).json(results.rows);
         }
-        res.status(200).json(results.rows);
     });
 });
 
