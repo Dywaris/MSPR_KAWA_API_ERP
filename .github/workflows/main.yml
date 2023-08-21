@@ -3,7 +3,7 @@ name: Merge Request Checks
 on:
   pull_request:
     branches:
-      - dev
+      - DEV
 
 
 jobs:
