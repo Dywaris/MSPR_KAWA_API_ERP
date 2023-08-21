@@ -112,7 +112,6 @@ async function sendMail(req, res, email, token) {
       html:          ' <table style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">\n' +
           '        <tr>\n' +
           '            <td style="padding: 20px; text-align: center;">\n' +
-          '                <img src="logo_payetonkawa.png" alt="PayeTonKawa Logo" style="max-width: 150px;">\n' +
           '                <h1 style="margin-top: 20px;">Connexion à votre compte</h1>\n' +
           '                <p>Merci de scanner le QR code ci-dessous pour vous connecter à votre compte PayeTonKawa :</p>\n' +
           '                <img  src="' + qrcodeurl + '" alt="QR Code de connexion" style="max-width: 200px; margin-top: 10px;">\n' +
