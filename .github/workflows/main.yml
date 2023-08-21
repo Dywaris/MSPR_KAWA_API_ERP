@@ -1,0 +1,48 @@
+name: Merge Request Checks
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+
+jobs:
+  merge_request_checks:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 18.17
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Tests and Coverage
+        run: npm test -- --detectOpenHandles --coverage
+
+      - name: Check Test Coverage
+        run: |
+          coverage_threshold=$(node -p "require('./coverage/coverage-summary.json').total.lines.pct")
+          if (( $(echo "$coverage_threshold < 100" | bc -l) )); then
+            echo "Test coverage is less than 100%. Blocking merge request."
+            exit 1
+          fi
+
+      - name: Build Application
+        run: npm run build
+
+      - name: Block Merge Request if Tests Failed or Coverage < 100%
+        run: |
+          if [[ ${{ job.status }} != "success" ]]; then
+            echo "Tests failed. Blocking merge request."
+            exit 1
+          fi
+
+      - name: Approve Merge Request
+        if: success()
+        run: echo "Merge request checks passed. Ready for merge."
