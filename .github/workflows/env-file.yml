@@ -1,10 +1,5 @@
 name: Create JSON File
 
-on:
-  push:
-    branches:
-      - dev
-
 jobs:
   create_json_file:
     runs-on: ubuntu-latest
