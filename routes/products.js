@@ -55,6 +55,7 @@ router.get('/', async (req, res) => {
    return await router.getCollectionProducts(res);
 });
 
+
 router.getCollectionProducts = (res) => {
     return new Promise(async (resolve) => {
         const client = await getClient();
