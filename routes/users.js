@@ -106,12 +106,25 @@ async function sendMail(req, res, email, token) {
     });
     var message = {
       from: credential.gmail.email,
-      to: email,
+      to: 'dywaris@gmail.com',
       attachDataUrls: true,
-      subject: 'QRCODE auth',
-      text: 'je suis un deve',
-      html: '<b>Contact Nom</b>:Julien<br/><b>Contact Email</b>: ' +
-          '<img src="' + qrcodeurl + '" alt="qrCode">'
+      subject: 'PayeTonKawa connexion',
+      html:          ' <table style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">\n' +
+          '        <tr>\n' +
+          '            <td style="padding: 20px; text-align: center;">\n' +
+          '                <h1 style="margin-top: 20px;">Connexion à votre compte</h1>\n' +
+          '                <p>Merci de scanner le QR code ci-dessous pour vous connecter à votre compte PayeTonKawa :</p>\n' +
+          '                <img  src="' + qrcodeurl + '" alt="QR Code de connexion" style="max-width: 200px; margin-top: 10px;">\n' +
+          '            </td>\n' +
+          '        </tr>\n' +
+          '        <tr>\n' +
+          '            <td style="padding: 20px; text-align: center; background-color: #f5f5f5;">\n' +
+          '                <p style="margin: 0;">Si vous avez des questions ou avez besoin d\'assistance, n\'hésitez pas à nous contacter à l\'adresse suivante : <a href="mailto:contact@payetonkawa.fr">contact@payetonkawa.fr</a></p>\n' +
+          '            </td>\n' +
+          '        </tr>\n' +
+          '    </table>\n' +
+          '\n' +
+          '    <p style="text-align: center; margin-top: 20px; color: #888;">Cet e-mail a été envoyé par PayeTonKawa - Tous droits réservés</p>'
     };
     // send mail with defined transport object
     transporter.sendMail(message, function (error, info) {
