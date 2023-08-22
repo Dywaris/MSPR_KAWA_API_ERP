@@ -1,10 +1,10 @@
 name: Merge Request Checks
 
-on:
+on: 
+  workflow_dispatch:
   pull_request:
     branches:
       - DEV
-  workflow_dispatch
 
 jobs:
   merge_request_checks:
