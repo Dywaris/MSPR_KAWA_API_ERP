@@ -14,7 +14,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
-
+      - name: List Files 2
+        run: ls
       - name: Create JSON File
         run: |
           echo '{
@@ -29,15 +30,15 @@ jobs:
               "port": "${{ secrets.BDD_PORT }}",
             },
             "gmail": {
-              "email": "${{ secrets.GMAIL_USER }}",
+              "email": "${{ secrets.GMAIL_EMAIL }}",
               "clientId": "${{ secrets.GMAIL_CLIENTID }}",
               "clientSecret": "${{ secrets.GMAIL_CLIENTSECRET }}",
               "accessToken": "${{ secrets.GMAIL_ACESSTOKEN }}",
               "refreshToken": "${{ secrets.GMAIL_REFRESHTOKEN }}",
             }
           }' > client-env.json
-
-
+      - name: List Files 2
+        run: ls
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
