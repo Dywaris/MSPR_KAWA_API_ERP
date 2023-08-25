@@ -55,7 +55,7 @@ jobs:
           SONAR_HOST_URL: "https://sonarcloud.io/"
         with:
           args:
-            -Dsonar.projectKey=Dywaris_MSPR_KAWA_API_ERP
+            -Dsonar.projectKey=MSPR_KAWA_API_ERP
             
       - name: Run Tests and Coverage
         run: npm test -- --detectOpenHandles --coverage
