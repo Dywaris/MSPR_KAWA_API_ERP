@@ -57,6 +57,7 @@ jobs:
           args:
             -Dsonar.projectKey=Dywaris_MSPR_KAWA_API_ERP
             -Dsonar.organization=dywaris
+            -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info
             
       - name: Run Tests and Coverage
         run: npm test -- --detectOpenHandles --coverage
