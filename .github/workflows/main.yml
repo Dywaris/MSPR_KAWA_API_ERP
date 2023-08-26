@@ -48,7 +48,7 @@ jobs:
         run: npm install
         
       - name: Run Tests and Coverage
-        run: NODE_ENV=test jest --detectOpenHandles --coverage
+        run: npm test 
         
       - name: Analyze with SonarQube
         uses: SonarSource/sonarqube-scan-action@master
