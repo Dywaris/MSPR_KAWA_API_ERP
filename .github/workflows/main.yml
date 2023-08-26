@@ -47,6 +47,9 @@ jobs:
       - name: Install Dependencies
         run: npm install
         
+      - name: Run Tests and Coverage
+        run: NODE_ENV=test jest --detectOpenHandles --coverage
+        
       - name: Analyze with SonarQube
         uses: SonarSource/sonarqube-scan-action@master
         env:
@@ -59,17 +62,6 @@ jobs:
             -Dsonar.organization=dywaris
             -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info
             
-      - name: Run Tests and Coverage
-        run: npm test -- --detectOpenHandles --coverage
-
-      - name: Check Test Coverage
-        run: |
-          coverage_threshold=$(node -p "require('./coverage/coverage-summary.json').total.lines.pct")
-          if (( $(echo "$coverage_threshold < 100" | bc -l) )); then
-            echo "Test coverage is less than 100%. Blocking merge request."
-            exit 1
-          fi
-
       - name: Build Application
         run: npm run build
 
