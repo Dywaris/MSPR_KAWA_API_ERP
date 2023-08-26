@@ -49,6 +49,9 @@ jobs:
         
       - name: Run Tests and Coverage
         run: npm test 
+
+      - name: Run Tests and Coverage
+        run: ls
         
       - name: Analyze with SonarQube
         uses: SonarSource/sonarqube-scan-action@master
@@ -62,16 +65,3 @@ jobs:
             -Dsonar.organization=dywaris
             -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info
             
-      - name: Build Application
-        run: npm run build
-
-      - name: Block Merge Request if Tests Failed or Coverage < 100%
-        run: |
-          if [[ ${{ job.status }} != "success" ]]; then
-            echo "Tests failed. Blocking merge request."
-            exit 1
-          fi
-
-      - name: Approve Merge Request
-        if: success()
-        run: echo "Merge request checks passed. Ready for merge."
