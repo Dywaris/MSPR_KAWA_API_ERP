@@ -76,5 +76,5 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: app-pack-erp
-          path: ./app-pack-erp.tgz
+          path: ./mspr-kawa-erp-0.0.0.tgz
         
