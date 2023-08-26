@@ -27,14 +27,14 @@ jobs:
               "host": "${{ secrets.BDD_HOST }}",
               "database": "${{ secrets.BDD_DATABASE }}",
               "password": "${{ secrets.BDD_PASSWORD }}",
-              "port": "${{ secrets.BDD_PORT }}",
+              "port": "${{ secrets.BDD_PORT }}"
             },
             "gmail": {
               "email": "${{ secrets.GMAIL_EMAIL }}",
               "clientId": "${{ secrets.GMAIL_CLIENTID }}",
               "clientSecret": "${{ secrets.GMAIL_CLIENTSECRET }}",
               "accessToken": "${{ secrets.GMAIL_ACESSTOKEN }}",
-              "refreshToken": "${{ secrets.GMAIL_REFRESHTOKEN }}",
+              "refreshToken": "${{ secrets.GMAIL_REFRESHTOKEN }}"
             }
           }' > client-env.json
       - name: List Files 2

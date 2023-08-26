@@ -5,11 +5,11 @@ let cookieParser = require('cookie-parser');
 let logger = require('morgan');
 let bodyParser = require("body-parser");
 const credential = require('./client-env.json');
+const { sequelize } = require('./Models/index');
 
 let usersRouter = require('./routes/users').router;
 let authRouter = require('./routes/authGuard').router;
 let productsRouter = require('./routes/products');
-
 let app = express();
 
 const swaggerDefinition = {
@@ -62,10 +62,32 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/users', usersRouter);
-app.use('/products', productsRouter);
-app.use('/auth', authRouter);
+async function testConnection() {
+  try {
+    await sequelize.authenticate();
+    console.log("Connection to the database has been established successfully.");
+  } catch (error) {
+    console.error("Unable to connect to the database:", error);
+  }
+}
+async function syncModels() {
+  try {
+    await sequelize.sync();
+    console.log("Models have been synchronized with the database.");
+  } catch (error) {
+    console.error("Unable to sync models with the database:", error);
+  }
+}
 
+syncModels();
+testConnection();
+
+
+app.use('/users', usersRouter);
+
+
+app.use('/products', productsRouter);
+ app.use('/auth', authRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
