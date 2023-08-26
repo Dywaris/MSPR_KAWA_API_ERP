@@ -69,9 +69,6 @@ jobs:
         env:
          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
          
-      - name: Build the app
-        run: npm run build
-    
       - name: Create package
         run: npm pack
 
