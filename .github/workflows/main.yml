@@ -37,6 +37,7 @@ jobs:
               "refreshToken": "${{ secrets.GMAIL_REFRESHTOKEN }}"
             }
           }' > client-env.json
+     
       - name: List Files 2
         run: cat client-env.json
         
