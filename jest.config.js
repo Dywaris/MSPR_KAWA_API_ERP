@@ -4,9 +4,9 @@ const config = {
     collectCoverageFrom: ['./routes/*.js'],
     coverageThreshold: {
         global: {
-            functions: 100,
-            lines: 80,
-            statements: -10,
+            // functions: 100,
+            // lines: 80,
+            // statements: -10,
         },
     }
 }

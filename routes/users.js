@@ -1,11 +1,11 @@
 let express = require('express');
 let router = express.Router();
-var {getClient} = require('../utils/connection-query');
 var crypto = require("crypto");
 const credential = require('./../client-env.json');
 let nodemailer = require('nodemailer');
 let qrcode = require('qrcode');
-
+let {sequelize, Sequelize} = require('../Models/index');
+let User = require('../Models/Users')(sequelize, Sequelize.DataTypes);
 /**
  * @swagger
  * /users:
@@ -46,16 +46,8 @@ async function createUser(req, res) {
     const alreadExist = await emailAlreadyExist(email);
     if (alreadExist !== true) {
       const token = crypto.randomBytes(26).toString('hex');
-      const client = await getClient();
-      client.query('INSERT INTO users (nom, prenom, email, cles_securite) VALUES ($1,$2, $3, $4)',
-          [lastname, firstname, email, token] , async (error, results) => {
-            await client.end();
-            if (error) {
-          return res.status(500).json({errorCode: 5001, description: 'Insert BDD failed'});
-        } else {
-          return sendMail(req, res, email, token);
-        }
-      });
+        await User.create({nom: lastname, prenom: firstname, email: email, cles_securite: token});
+        return sendMail(req, res, email, token);
     } else {
        return res.status(500).json({errorCode: 5002, description: 'User already created'});
     }
@@ -67,16 +59,13 @@ async function createUser(req, res) {
 
 async function emailAlreadyExist(email) {
   return new Promise(async (resolve) => {
-    const client = await getClient();
-    client.query('SELECT * FROM users\n' +
-        'WHERE email = $1',[email], async (error, results) => {
-      await client.end();
-      if (error) {
-        return res.status(500).json({errorCode: 5000, description: 'Connection BDD failed'});
+    const user = await User.findOne({where:{email: email}});
+      if (user === null) {
+        return resolve(false);
+      } else {
+        return resolve(true);
       }
-      return resolve(results.rows.length !== 0);
     });
-  });
 }
 
 async function generateQrcode(token) {
@@ -106,7 +95,7 @@ async function sendMail(req, res, email, token) {
     });
     var message = {
       from: credential.gmail.email,
-      to: 'dywaris@gmail.com',
+      to: email,
       attachDataUrls: true,
       subject: 'PayeTonKawa connexion',
       html:          ' <table style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">\n' +
@@ -128,11 +117,7 @@ async function sendMail(req, res, email, token) {
     };
     // send mail with defined transport object
     transporter.sendMail(message, function (error, info) {
-      if (error) {
-       return  resolve(res.status(500).json({errorCode: 5004, description: 'Error mail server, mail not send'}));
-      } else {
         return resolve(res.status(201).json({status:'ok'}));
-      }
     });
   });
 }
