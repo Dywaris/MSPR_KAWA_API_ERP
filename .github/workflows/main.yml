@@ -68,10 +68,6 @@ jobs:
         uses: sonarsource/sonarqube-quality-gate-action@master 
         env:
          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
-      - name: Block Commit on Failure
-        if: ${{ failure() }}  
-        run: exit 1  # Quitte l'étape 
          
       - name: Create package
         run: npm pack
