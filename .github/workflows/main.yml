@@ -68,4 +68,16 @@ jobs:
         uses: sonarsource/sonarqube-quality-gate-action@master 
         env:
          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+         
+      - name: Build the app
+        run: npm run build
+    
+      - name: Create package
+        run: npm pack
+
+      - name: Deploy package
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-pack-erp
+          path: ./app-pack-erp.tgz
         
