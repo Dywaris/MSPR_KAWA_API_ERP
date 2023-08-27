@@ -70,16 +70,17 @@ async function testConnection() {
     console.error("Unable to connect to the database:", error);
   }
 }
-async function syncModels() {
-  try {
-    await sequelize.sync();
-    console.log("Models have been synchronized with the database.");
-  } catch (error) {
-    console.error("Unable to sync models with the database:", error);
-  }
+  async function syncModels() {
+    try {
+      await sequelize.sync();
+      console.log("Models have been synchronized with the database.");
+    } catch (error) {
+      console.error("Unable to sync models with the database:", error);
+    }
+
 }
 
-syncModels();
+  syncModels();
 testConnection();
 
 
