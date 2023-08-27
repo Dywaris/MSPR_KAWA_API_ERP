@@ -3,7 +3,6 @@ const app = require("../app");
 const credential = require('../client-env.json');
 let {sequelize, Sequelize} = require('../Models/index');
 let User = require('../Models/Users')(sequelize, Sequelize.DataTypes);
-
 let Products = require('../Models/Products')(sequelize, Sequelize.DataTypes);
 let Product_details = require('../Models/Product_details')(sequelize, Sequelize.DataTypes);
 

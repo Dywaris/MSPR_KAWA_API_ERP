@@ -7,19 +7,20 @@ const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
 const db = {};
 let sequelize
-if (env === 'development') {
-  sequelize = new Sequelize(credential.bdd.database, credential.bdd.user, credential.bdd.password, {
-    host: credential.bdd.host,
-    port: credential.bdd.port,
-    dialect:  'postgres',
+if (env === 'test') {
+  sequelize = new Sequelize({
+    dialect: "sqlite",
+    storage: ":memory:",
     define: {
       timestamps: false
     }
   });
 } else {
-  sequelize = new Sequelize({
-    dialect: "sqlite",
-    storage: ":memory:",
+  sequelize = new Sequelize(credential.bdd.database, credential.bdd.user, credential.bdd.password, {
+    host: credential.bdd.host,
+    port: credential.bdd.port,
+    dialect:  'postgres',
+    logging: false,
     define: {
       timestamps: false
     }
