@@ -1,7 +1,9 @@
 var express = require('express');
 var router = express.Router();
-var {getClient} = require('../utils/connection-query');
-let checkToken = require('./authGuard').checkToken;
+let checkToken = require('../routes/authGuard').checkToken;
+let {sequelize, Sequelize} = require('../Models/index');
+let Products = require('../Models/Products')(sequelize, Sequelize.DataTypes);
+let product_details = require('../Models/Product_details')(sequelize, Sequelize.DataTypes);
 
 /**
  * @swagger
@@ -52,23 +54,9 @@ let checkToken = require('./authGuard').checkToken;
  */
 router.get('/', async (req, res) => {
     await checkToken(JSON.parse(JSON.stringify(req.headers)), res);
-   return await router.getCollectionProducts(res);
+    const allProducts = await Products.findAll({include: product_details});
+     res.status(200).json(allProducts);
 });
-
-router.getCollectionProducts = (res) => {
-    return new Promise(async (resolve) => {
-        const client = await getClient();
-        client.query('SELECT * FROM products\n' +
-            'inner JOIN details on products.details_id = details.id\n' +
-            'ORDER BY products.id ASC', async (error, results) => {
-            await client.end();
-            if (error) {res.status(404); } else {
-                return resolve(res.status(200).json(results.rows));
-            }
-        });
-    })
-
-}
 
 
 
@@ -129,18 +117,12 @@ router.getCollectionProducts = (res) => {
 router.get('/:id', async (req, res) => {
     await checkToken(JSON.parse(JSON.stringify(req.headers)), res);
     const id = parseInt(req.params.id);
-    const client = await getClient();
-    client.query('SELECT * FROM products\n' +
-        'inner JOIN details on products.details_id = details.id\n' +
-        'WHERE products.id = $1\n' +
-        'ORDER BY products.id ASC',[id] , async (error, results) => {
-        await client.end();
-        if (error) {
-            res.status(404);
+    const OneProduct = await Products.findOne({ where:{id: id}, include: product_details});
+        if (OneProduct) {
+           return res.status(200).json(OneProduct);
         } else {
-            res.status(200).json(results.rows);
+            return res.status(404).json('not found');
         }
-    });
 });
 
 

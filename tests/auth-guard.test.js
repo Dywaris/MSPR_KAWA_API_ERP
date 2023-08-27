@@ -2,11 +2,20 @@ const request = require("supertest");
 const app = require("../app");
 const credential = require('../client-env.json');
 const importedFunction = require('../routes/authGuard');
-
+let {sequelize, Sequelize} = require('../Models/index');
+let User = require('../Models/Users')(sequelize, Sequelize.DataTypes);
 
 describe("Test authGuard file", () => {
 
-
+    beforeAll(async () => {
+        await sequelize.sync();
+        const plop = await User.create({
+            nom: 'ju',
+            prenom: 'dez',
+            email: 'email@exemple.com',
+            cles_securite: 'azerty123654789'
+        });
+    });
     const mockResponse = () => {
         const res = {};
         res.status = (v) => {res.mockStatus = v; return  res};
@@ -15,7 +24,7 @@ describe("Test authGuard file", () => {
     };
     test("checkToken good token", async () => {
         const header = {
-            token : credential.token
+            token : 'azerty123654789'
         };
         const response = await importedFunction.checkToken(header);
         expect(response).toBe(true);
@@ -30,7 +39,6 @@ describe("Test authGuard file", () => {
         const errorCode = response.mockJson.errorCode
         expect(response.mockStatus).toBe(403);
         expect(errorCode).toBe(4001);
-
     });
 
 
@@ -44,8 +52,8 @@ describe("Test authGuard file", () => {
 
     test(" test connection", async () => {
         const authParams = {
-            token: credential.token,
-            email: credential.email
+            token: 'azerty123654789',
+            email: 'email@exemple.com'
         };
         const response = await request(app).post('/auth').send(authParams);
         expect(response.status).toBe(201);
@@ -54,7 +62,7 @@ describe("Test authGuard file", () => {
     test(" test wrong connection", async () => {
         const authParams = {
             token: 'AZERTY',
-            email: credential.email
+            email:'email@exemple.com'
         };
         const response = await request(app).post('/auth').send(authParams);
         const errorCode = JSON.parse(response.text).errorCode;

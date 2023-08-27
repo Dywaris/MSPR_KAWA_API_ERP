@@ -1,0 +1,75 @@
+name: Merge Request Checks
+
+on:
+  pull_request:
+    branches:
+      - master
+    types: [closed]
+
+jobs:
+  merge_request_checks:
+    runs-on: ubuntu-latest
+    environment: 'PROD'
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Create JSON File
+        run: |
+          echo '{
+            "port" : "${{ secrets.PORT }}",
+            "token": "${{ secrets.TOKEN }}",
+            "email": "${{ secrets.EMAIL }}",
+            "bdd": {
+              "user": "${{ secrets.BDD_USER }}",
+              "host": "${{ secrets.BDD_HOST }}",
+              "database": "${{ secrets.BDD_DATABASE }}",
+              "password": "${{ secrets.BDD_PASSWORD }}",
+              "port": "${{ secrets.BDD_PORT }}"
+            },
+            "gmail": {
+              "email": "${{ secrets.GMAIL_EMAIL }}",
+              "clientId": "${{ secrets.GMAIL_CLIENTID }}",
+              "clientSecret": "${{ secrets.GMAIL_CLIENTSECRET }}",
+              "accessToken": "${{ secrets.GMAIL_ACESSTOKEN }}",
+              "refreshToken": "${{ secrets.GMAIL_REFRESHTOKEN }}"
+            }
+          }' > client-env.json
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 18.17
+
+      - name: Install Dependencies
+        run: npm install
+        
+      - name: Run Tests and Coverage
+        run: npm test 
+        
+      - name: Analyze with SonarQube
+        uses: SonarSource/sonarqube-scan-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: "https://sonarcloud.io/"
+        with:
+          args:
+            -Dsonar.projectKey=Dywaris_MSPR_KAWA_API_ERP
+            -Dsonar.organization=dywaris
+            -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info
+
+      - name: SonarQube Quality Gate check
+        uses: sonarsource/sonarqube-quality-gate-action@master 
+        env:
+         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+         
+      - name: Create package
+        run: npm pack
+
+      - name: Deploy package
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-pack-erp
+          path: ./mspr-kawa-erp-0.0.0.tgz
+        
